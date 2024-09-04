@@ -28,6 +28,7 @@ defmodule TelemetryMetricsPrometheus.Core.Counter do
              &__MODULE__.handle_event/4,
              %{
                keep: metric.keep,
+               measurement: metric.measurement,
                metric_name: "",
                name: metric.name,
                table: table_id,
