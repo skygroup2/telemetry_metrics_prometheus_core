@@ -58,8 +58,12 @@ defmodule TelemetryMetricsPrometheus.Core.LastValue do
          :ok <- EventHandler.validate_tags_in_tag_values(config.tags, mapped_values) do
       labels = Map.take(mapped_values, config.tags)
       key = {config.name, labels}
-
-      :ets.insert(config.table, {key, measurement})
+      case Map.get(measurements, :__op__) do
+        :inc ->
+          :ets.update_counter(config.table, key, measurement, {key, 0})
+        _ ->
+         :ets.insert(config.table, {key, measurement})
+      end
       :ok
     else
       false -> :ok
